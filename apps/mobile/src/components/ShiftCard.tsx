@@ -5,7 +5,7 @@ import { styles } from '../styles';
 
 interface ShiftCardProps {
   shift: Shift;
-  onRequest?: (shiftId: string) => void;
+  onRequest?: (shiftId: string, bartenderId: string) => void;
   onCancel?: (shiftId: string) => void;
   userRole?: 'bartender' | 'venue';
   currentUserId?: string;
@@ -64,7 +64,7 @@ const ShiftCard: React.FC<ShiftCardProps> = ({
       {userRole === 'bartender' && shift.status === 'open' && !hasRequested && (
         <TouchableOpacity
           style={styles.button}
-          onPress={() => onRequest?.(shift.id)}
+          onPress={() => onRequest?.(shift.id, currentUserId!)}
         >
           <Text style={styles.buttonText}>Request This Shift</Text>
         </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth, validateEmail, validatePassword } from '@gig-bartending/shared';
+import { useAuth, validateEmail } from '@gig-bartending/shared';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {

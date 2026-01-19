@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useAuth, validateEmail, validatePassword } from '@gig-bartending/shared';
+import { useAuth, validateEmail } from '@gig-bartending/shared';
 import { styles } from '../styles';
 
 const LoginScreen = ({ navigation }: any) => {

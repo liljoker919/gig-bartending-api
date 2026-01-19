@@ -3,8 +3,7 @@ import { Shift, formatCurrency, formatDate, formatTime } from '@gig-bartending/s
 
 interface ShiftCardProps {
   shift: Shift;
-  onRequest?: (shiftId: string) => void;
-  onAccept?: (shiftId: string, bartenderId: string) => void;
+  onRequest?: (shiftId: string, bartenderId: string) => void;
   onCancel?: (shiftId: string) => void;
   userRole?: 'bartender' | 'venue';
   currentUserId?: string;
@@ -13,7 +12,6 @@ interface ShiftCardProps {
 const ShiftCard: React.FC<ShiftCardProps> = ({
   shift,
   onRequest,
-  onAccept,
   onCancel,
   userRole,
   currentUserId,
@@ -49,7 +47,7 @@ const ShiftCard: React.FC<ShiftCardProps> = ({
 
       {userRole === 'bartender' && shift.status === 'open' && !hasRequested && (
         <button
-          onClick={() => onRequest?.(shift.id)}
+          onClick={() => onRequest?.(shift.id, currentUserId!)}
           className="button button-primary"
           style={{ width: '100%' }}
         >
