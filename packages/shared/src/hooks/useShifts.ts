@@ -69,7 +69,7 @@ export const useShifts = () => {
   const addShift = async (shift: Omit<Shift, 'id' | 'status' | 'createdAt' | 'requestedBy'>) => {
     const newShift: Shift = {
       ...shift,
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).substring(2, 11),
       status: 'open',
       requestedBy: [],
       createdAt: new Date().toISOString(),

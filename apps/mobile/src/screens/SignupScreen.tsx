@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Picker } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth, validateEmail, validatePassword, UserRole, BartenderProfile, VenueProfile } from '@gig-bartending/shared';
 import { styles } from '../styles';
 
@@ -63,15 +63,29 @@ const SignupScreen = ({ navigation }: any) => {
         <Text style={styles.header}>Sign Up</Text>
 
         <Text style={styles.label}>I am a...</Text>
-        <View style={[styles.input, { padding: 0 }]}>
-          <Picker
-            selectedValue={role}
-            onValueChange={(itemValue) => setRole(itemValue as UserRole)}
-            enabled={!isLoading}
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 16 }}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              role === 'bartender' ? styles.button : styles.buttonSecondary,
+              { flex: 1 }
+            ]}
+            onPress={() => setRole('bartender')}
+            disabled={isLoading}
           >
-            <Picker.Item label="Bartender" value="bartender" />
-            <Picker.Item label="Venue Owner" value="venue" />
-          </Picker>
+            <Text style={styles.buttonText}>Bartender</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              role === 'venue' ? styles.button : styles.buttonSecondary,
+              { flex: 1 }
+            ]}
+            onPress={() => setRole('venue')}
+            disabled={isLoading}
+          >
+            <Text style={styles.buttonText}>Venue Owner</Text>
+          </TouchableOpacity>
         </View>
 
         <Text style={styles.label}>Email</Text>

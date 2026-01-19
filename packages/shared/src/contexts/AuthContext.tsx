@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // For demo purposes, we'll create a mock user based on email
       const isBartender = credentials.email.includes('bartender');
       const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(36).substring(2, 11),
         email: credentials.email,
         role: isBartender ? 'bartender' : 'venue',
         profile: isBartender
@@ -72,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       // Mock signup - in production, this would call the API
       const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(36).substring(2, 11),
         email: data.email,
         role: data.role,
         profile: data.profile as any,
