@@ -1,0 +1,30 @@
+{
+  "name": "gig-bartending-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A cross-platform app that connects bartenders with open shifts",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start --workspace=@gig-bartending/mobile",
+    "web": "npm run dev --workspace=@gig-bartending/web",
+    "build:web": "npm run build --workspace=@gig-bartending/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "type-check": "npm run type-check --workspaces --if-present"
+  },
+  "keywords": [
+    "bartending",
+    "gig-work",
+    "shifts",
+    "react-native",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}
