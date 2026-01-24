@@ -147,8 +147,6 @@ build/
 .expo-shared/
 
 # .NET
-bin/
-obj/
 *.user
 *.suo
 *.userosscache
@@ -176,4 +174,3 @@ bld/
 project.lock.json
 project.fragment.lock.json
 artifacts/
-**/Properties/launchSettings.json
