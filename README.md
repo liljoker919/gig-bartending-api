@@ -73,7 +73,14 @@ git clone https://github.com/liljoker919/gig-bartending-app.git
 cd gig-bartending-app
 ```
 
-2. Install dependencies:
+2. Set up environment variables:
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file to configure your local environment settings. See the [Environment Configuration](#environment-configuration) section for details.
+
+3. Install dependencies:
 ```bash
 npm install
 ```
@@ -196,6 +203,37 @@ The `@gig-bartending/shared` package contains:
 - **Styling**: 
   - CSS (Web)
   - StyleSheet API (Mobile)
+
+## Environment Configuration
+
+The application uses environment variables for configuration. A `.env.example` file is provided at the repository root with all available configuration options.
+
+### Setup
+
+1. Copy the example file:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Update the values in `.env` for your local environment.
+
+### Key Environment Variables
+
+- **`VITE_API_BASE_URL`**: API endpoint for the web application (default: `http://localhost:5000`)
+- **`EXPO_PUBLIC_API_BASE_URL`**: API endpoint for the mobile application (use your local IP for physical devices)
+- **`ASPNETCORE_ENVIRONMENT`**: .NET environment mode (Development, Staging, Production)
+- **`DATABASE_CONNECTION_STRING`**: Database connection string for the API
+- **`JWT_SECRET`**: Secret key for JWT token generation (change for production!)
+- **`CORS_ALLOWED_ORIGINS`**: Allowed origins for CORS (include your web and mobile app URLs)
+
+See `.env.example` for the complete list of configuration options with detailed comments.
+
+### Important Notes
+
+- **Never commit** `.env` files to version control (already configured in `.gitignore`)
+- The `.env.example` file documents all available options with safe default values
+- Update `JWT_SECRET` and other sensitive values before deploying to production
+- For mobile development on physical devices, use your computer's local IP address instead of `localhost`
 
 ## Future Enhancements
 
