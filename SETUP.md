@@ -46,7 +46,7 @@ Open the `.env` file and update the values as needed. The example file includes 
 #### API Backend
 - `ASPNETCORE_ENVIRONMENT`: Set to `Development` for local development
 - `DATABASE_CONNECTION_STRING`: Database connection (default uses SQLite)
-- `JWT_SECRET`: Secret key for authentication (minimum 32 characters)
+- `JWT_SECRET`: Secret key for authentication (64+ characters recommended)
 - `CORS_ALLOWED_ORIGINS`: Add your web app URL (`http://localhost:3000`)
 
 **Important:** Never commit your `.env` file to version control. It's already excluded in `.gitignore`.
@@ -65,7 +65,7 @@ This command will install dependencies for:
 - `apps/web` - Web application
 - `apps/mobile` - Mobile application
 
-### 3. Build the Shared Package
+### 4. Build the Shared Package
 
 The shared package needs to be built before running the apps:
 
@@ -102,7 +102,7 @@ The application uses environment variables for configuration across all services
 | `ASPNETCORE_ENVIRONMENT` | ASP.NET environment | `Development` | Yes |
 | `ASPNETCORE_URLS` | API listen URLs | `http://localhost:5000` | Yes |
 | `DATABASE_CONNECTION_STRING` | Database connection | `Data Source=gigbartending.db` | Yes |
-| `JWT_SECRET` | JWT signing key (32+ chars) | - | Yes |
+| `JWT_SECRET` | JWT signing key (64+ chars) | - | Yes |
 | `JWT_ISSUER` | JWT token issuer | `GigBartendingApp` | No |
 | `JWT_AUDIENCE` | JWT token audience | `GigBartendingApp` | No |
 | `JWT_EXPIRY_MINUTES` | Token expiration time | `60` | No |
@@ -113,7 +113,7 @@ The application uses environment variables for configuration across all services
 ### Security Best Practices
 
 1. **Never commit `.env` files** - They contain sensitive information and are excluded via `.gitignore`
-2. **Use strong secrets** - Generate secure random strings for `JWT_SECRET` (32+ characters)
+2. **Use strong secrets** - Generate secure random strings for `JWT_SECRET` (64+ characters recommended, use `openssl rand -base64 64`)
 3. **Rotate secrets regularly** - Change production secrets periodically
 4. **Use different values per environment** - Development, staging, and production should have different secrets
 5. **Restrict CORS origins** - Only allow trusted origins in production
