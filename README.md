@@ -34,6 +34,15 @@ gig-bartending-app/
 │       │   └── navigation/  # Navigation setup
 │       └── package.json
 │
+├── services/
+│   └── api/                 # .NET Web API backend
+│       ├── GigBartending.Api/
+│       │   ├── Controllers/ # API endpoints
+│       │   ├── Models/      # Domain models
+│       │   ├── Services/    # Business logic
+│       │   └── Program.cs   # Entry point
+│       └── README.md        # API documentation
+│
 ├── packages/
 │   └── shared/              # Shared logic and types
 │       ├── src/
@@ -72,6 +81,24 @@ npm install
 This will install dependencies for all workspaces (root, shared, web, and mobile).
 
 ### Running the Applications
+
+#### API (Backend)
+
+For API development, you'll need .NET 8 SDK or later.
+
+```bash
+npm run api
+```
+
+Or directly:
+```bash
+cd services/api/GigBartending.Api
+dotnet run
+```
+
+The API will be available at `http://localhost:5000`
+
+See [services/api/README.md](services/api/README.md) for detailed API documentation.
 
 #### Web App
 

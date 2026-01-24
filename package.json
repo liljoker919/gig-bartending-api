@@ -10,6 +10,9 @@
   "scripts": {
     "mobile": "npm run start --workspace=@gig-bartending/mobile",
     "web": "npm run dev --workspace=@gig-bartending/web",
+    "api": "cd services/api/GigBartending.Api && dotnet run",
+    "api:build": "cd services/api && dotnet build",
+    "api:test": "cd services/api && dotnet test",
     "build:web": "npm run build --workspace=@gig-bartending/web",
     "lint": "npm run lint --workspaces --if-present",
     "type-check": "npm run type-check --workspaces --if-present"
