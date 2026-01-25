@@ -38,6 +38,98 @@ services/api/
 - .NET 8 SDK or later
 - Visual Studio 2022 / VS Code / Rider (optional)
 - SQL Server / PostgreSQL (for production use)
+- **Docker Desktop for Windows** (for local SQL Server development)
+
+#### Installing Docker Desktop for Windows
+
+1. **Download Docker Desktop**:
+   - Visit: https://www.docker.com/products/docker-desktop
+   - Download the Windows version
+
+2. **Install Docker Desktop**:
+   - Run the installer as Administrator
+   - Follow the installation wizard
+   - Restart your computer if prompted
+
+3. **Verify Installation**:
+   ```bash
+   docker --version
+   docker-compose --version
+   ```
+
+4. **Start Docker Desktop**:
+   - Launch Docker Desktop from Start menu
+   - Wait for the Docker whale icon to show it's running
+   - The daemon should start automatically
+
+**Note**: Docker Desktop includes both Docker Engine and Docker Compose, so no separate installation is needed.
+
+### Local Development with Docker Compose
+
+This project includes a Docker Compose setup for running SQL Server locally during development.
+
+#### Starting SQL Server
+
+1. Copy the environment file and set your SQL Server password:
+```bash
+cp ../../.env.example ../../.env
+# Edit .env and set SQLSERVER_SA_PASSWORD to a strong password
+```
+
+2. Start the SQL Server container:
+```bash
+docker-compose up -d
+```
+
+The SQL Server will be available at `localhost:1433`.
+
+#### Stopping SQL Server
+
+```bash
+docker-compose down
+```
+
+#### SSMS Connection Details
+
+- **Server**: `localhost,1433`
+- **Authentication**: SQL Server Authentication
+- **Login**: `sa`
+- **Password**: The value of `SQLSERVER_SA_PASSWORD` from your `.env` file
+- **Trust Server Certificate**: `true` (recommended for development)
+
+#### Connecting to SSMS (SQL Server Management Studio)
+
+1. **Open SSMS** on your Windows machine.
+
+2. **Connect to Server** dialog:
+   - **Server type**: Database Engine
+   - **Server name**: `localhost,1433`
+   - **Authentication**: SQL Server Authentication
+   - **Login**: `sa`
+   - **Password**: `YourStrong!Passw0rd` (or your custom password from `.env`)
+
+3. **Connection Options**:
+   - Check **"Trust server certificate"** (recommended for development)
+   - Optionally check **"Encrypt connection"**
+
+4. **Click "Connect"** - you should now be connected to your Docker SQL Server!
+
+**Test Query** (run in a new query window):
+```sql
+SELECT @@VERSION AS SQL_Server_Version;
+```
+
+**Alternative Connection String** (for other tools):
+```
+Server=localhost,1433;Database=master;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true
+```
+
+#### Troubleshooting
+
+- **Password Requirements**: SA password must be at least 8 characters and contain uppercase, lowercase, digits, and symbols.
+- **Port Conflicts**: If port 1433 is already in use, check if another SQL Server instance is running or change the port mapping in `docker-compose.yml`.
+- **Container Logs**: View logs with `docker-compose logs sqlserver`
+- **Reset Database**: Remove the container and volume with `docker-compose down -v` then restart.
 
 ### Installation
 
