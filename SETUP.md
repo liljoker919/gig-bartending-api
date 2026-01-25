@@ -24,7 +24,34 @@ git clone https://github.com/liljoker919/gig-bartending-app.git
 cd gig-bartending-app
 ```
 
-### 2. Install Dependencies
+### 2. Set Up Environment Variables
+
+Copy the example environment file and configure it for your local setup:
+
+```bash
+cp .env.example .env
+```
+
+Open the `.env` file and update the values as needed. The example file includes detailed comments for each variable. Key variables to configure:
+
+#### Web Application
+- `VITE_API_BASE_URL`: API endpoint (default: `http://localhost:5000`)
+- `VITE_PORT`: Web app port (default: `3000`)
+
+#### Mobile Application
+- `EXPO_PUBLIC_API_BASE_URL`: API endpoint
+  - For iOS simulator/Android emulator: `http://localhost:5000`
+  - For physical devices: Use your computer's local IP (e.g., `http://192.168.1.100:5000`)
+
+#### API Backend
+- `ASPNETCORE_ENVIRONMENT`: Set to `Development` for local development
+- `DATABASE_CONNECTION_STRING`: Database connection (default uses SQLite)
+- `JWT_SECRET`: Secret key for authentication (64+ characters recommended)
+- `CORS_ALLOWED_ORIGINS`: Add your web app URL (`http://localhost:3000`)
+
+**Important:** Never commit your `.env` file to version control. It's already excluded in `.gitignore`.
+
+### 3. Install Dependencies
 
 Install all dependencies for the monorepo:
 
@@ -38,7 +65,7 @@ This command will install dependencies for:
 - `apps/web` - Web application
 - `apps/mobile` - Mobile application
 
-### 3. Build the Shared Package
+### 4. Build the Shared Package
 
 The shared package needs to be built before running the apps:
 
@@ -47,6 +74,49 @@ cd packages/shared
 npm run build
 cd ../..
 ```
+
+## Environment Variables Reference
+
+The application uses environment variables for configuration across all services. Below is a comprehensive list of available variables:
+
+### Web Application (Vite + React)
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `VITE_API_BASE_URL` | Backend API base URL | `http://localhost:5000` | Yes |
+| `VITE_PORT` | Development server port | `3000` | No |
+| `NODE_ENV` | Node environment | `development` | No |
+
+### Mobile Application (Expo + React Native)
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `EXPO_PUBLIC_API_BASE_URL` | Backend API base URL | `http://localhost:5000` | Yes |
+
+**Note for Mobile:** When testing on physical devices, use your computer's local IP address instead of `localhost`. Find your IP with `ipconfig` (Windows) or `ifconfig` (Mac/Linux).
+
+### API Backend (.NET 8)
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `ASPNETCORE_ENVIRONMENT` | ASP.NET environment | `Development` | Yes |
+| `ASPNETCORE_URLS` | API listen URLs | `http://localhost:5000` | Yes |
+| `DATABASE_CONNECTION_STRING` | Database connection | `Data Source=gigbartending.db` | Yes |
+| `JWT_SECRET` | JWT signing key (64+ chars) | - | Yes |
+| `JWT_ISSUER` | JWT token issuer | `GigBartendingApp` | No |
+| `JWT_AUDIENCE` | JWT token audience | `GigBartendingApp` | No |
+| `JWT_EXPIRY_MINUTES` | Token expiration time | `60` | No |
+| `CORS_ALLOWED_ORIGINS` | CORS allowed origins | `http://localhost:3000` | Yes |
+| `LOG_LEVEL` | Logging level | `Information` | No |
+| `ENABLE_SWAGGER` | Enable Swagger UI | `true` | No |
+
+### Security Best Practices
+
+1. **Never commit `.env` files** - They contain sensitive information and are excluded via `.gitignore`
+2. **Use strong secrets** - Generate secure random strings for `JWT_SECRET` (64+ characters recommended, use `openssl rand -base64 64`)
+3. **Rotate secrets regularly** - Change production secrets periodically
+4. **Use different values per environment** - Development, staging, and production should have different secrets
+5. **Restrict CORS origins** - Only allow trusted origins in production
 
 ## Running the Applications
 
