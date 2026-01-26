@@ -57,6 +57,11 @@ echo ""
 # Run the seed command
 echo "🌱 Seeding database..."
 dotnet run --seed-only
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to seed database"
+    exit 1
+fi
+echo "✅ Database seeded successfully"
 echo ""
 
 echo "╔════════════════════════════════════════════════════════════════════╗"

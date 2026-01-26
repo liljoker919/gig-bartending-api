@@ -66,6 +66,11 @@ echo ""
 # Apply migrations
 echo "🔧 Applying migrations..."
 dotnet ef database update
+if [ $? -ne 0 ]; then
+    echo "❌ Failed to apply migrations"
+    exit 1
+fi
+echo "✅ Migrations applied successfully"
 echo ""
 
 echo "╔════════════════════════════════════════════════════════════════════╗"
