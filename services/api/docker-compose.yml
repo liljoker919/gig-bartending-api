@@ -1,0 +1,22 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-CU13-ubuntu-22.04
+    container_name: gigbartending-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SQLSERVER_SA_PASSWORD:?SQLSERVER_SA_PASSWORD is required}
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - gigbartending-network
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data:
+
+networks:
+  gigbartending-network:
+    driver: bridge
