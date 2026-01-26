@@ -21,7 +21,7 @@ if (!string.IsNullOrEmpty(connectionString))
 var app = builder.Build();
 
 // Check for seed-only mode
-if (args.Contains("--seed-only"))
+if (args.Length > 0 && args.Any(arg => arg.Equals("--seed-only", StringComparison.OrdinalIgnoreCase)))
 {
     Console.WriteLine("Running in seed-only mode...");
     
