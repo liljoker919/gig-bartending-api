@@ -34,17 +34,30 @@ if ! command -v dotnet-ef &> /dev/null; then
     echo ""
 fi
 
+# Detect docker compose command (docker-compose or docker compose)
+DOCKER_COMPOSE_CMD=""
+if command -v docker-compose &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker-compose"
+elif docker compose version &> /dev/null; then
+    DOCKER_COMPOSE_CMD="docker compose"
+fi
+
 # Check if Docker container is running
 echo "🔍 Checking if SQL Server Docker container is running..."
 if ! docker ps | grep -q gigbartending-sqlserver; then
     echo "⚠️  SQL Server container is not running."
-    echo "Starting Docker container..."
-    cd "$SCRIPT_DIR"
-    docker-compose up -d
-    echo "⏳ Waiting 15 seconds for SQL Server to start..."
-    sleep 15
-    cd "$API_DIR"
-    echo "✅ SQL Server container is now running"
+    if [ -n "$DOCKER_COMPOSE_CMD" ]; then
+        echo "Starting Docker container..."
+        cd "$SCRIPT_DIR"
+        $DOCKER_COMPOSE_CMD up -d
+        echo "⏳ Waiting 15 seconds for SQL Server to start..."
+        sleep 15
+        cd "$API_DIR"
+        echo "✅ SQL Server container is now running"
+    else
+        echo "❌ ERROR: Docker Compose is not available. Please install Docker Desktop or Docker Compose."
+        exit 1
+    fi
 else
     echo "✅ SQL Server container is already running"
 fi
