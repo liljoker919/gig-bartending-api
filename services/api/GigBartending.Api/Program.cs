@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using GigBartending.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +8,41 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add DbContext
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
+    
+if (!string.IsNullOrEmpty(connectionString))
+{
+    builder.Services.AddDbContext<GigBartendingDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
+
 var app = builder.Build();
+
+// Check for seed-only mode
+if (args.Contains("--seed-only"))
+{
+    Console.WriteLine("Running in seed-only mode...");
+    
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+        try
+        {
+            var context = services.GetRequiredService<GigBartendingDbContext>();
+            DbSeeder.SeedData(context);
+            Console.WriteLine("Seeding completed successfully!");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+            throw;
+        }
+    }
+    
+    return; // Exit without starting the web server
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
