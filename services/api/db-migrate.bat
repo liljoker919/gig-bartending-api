@@ -70,8 +70,9 @@ if %ERRORLEVEL% NEQ 0 (
     echo ❌ Failed to apply migrations
     exit /b 1
 )
-echo.
+echo ✅ Migrations applied successfully
 
+echo.
 echo ╔════════════════════════════════════════════════════════════════════╗
 echo ║                  MIGRATIONS APPLIED SUCCESSFULLY!                  ║
 echo ╚════════════════════════════════════════════════════════════════════╝

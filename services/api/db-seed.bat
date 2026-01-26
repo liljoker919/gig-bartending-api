@@ -60,8 +60,9 @@ if %ERRORLEVEL% NEQ 0 (
     echo ❌ Failed to seed database
     exit /b 1
 )
-echo.
+echo ✅ Database seeded successfully
 
+echo.
 echo ╔════════════════════════════════════════════════════════════════════╗
 echo ║                   DATABASE SEEDED SUCCESSFULLY!                    ║
 echo ╚════════════════════════════════════════════════════════════════════╝
