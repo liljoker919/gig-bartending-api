@@ -257,14 +257,140 @@ public class ShiftsController : ControllerBase
 2. Create implementation in `Services/{ServiceName}.cs`
 3. Register in `Program.cs` with dependency injection
 
-### Database Migrations (Future)
+### Database Migrations and Reset
+
+**⚠️ WARNING: Database reset commands are for LOCAL DEVELOPMENT ONLY!**
+
+The API includes scripts to manage database migrations and seeding. These scripts are designed for local development and include safeguards against running in production.
+
+#### Quick Start - Reset Database
+
+To reset your local database and populate it with sample data:
 
 ```bash
-# Add migration
-dotnet ef migrations add MigrationName
+# From repository root
+npm run db:reset && npm run db:seed
 
-# Update database
+# Or from services/api directory
+bash db-reset.sh && bash db-seed.sh     # Linux/macOS
+db-reset.bat && db-seed.bat            # Windows
+```
+
+#### Available Commands
+
+**1. Reset Database (Drop & Recreate)**
+
+Drops the entire database and recreates it with all migrations applied.
+
+```bash
+# From repository root
+npm run db:reset
+
+# Or from services/api directory
+bash db-reset.sh        # Linux/macOS
+db-reset.bat           # Windows
+```
+
+This will:
+- Drop the existing database (⚠️ ALL DATA WILL BE LOST!)
+- Recreate the database
+- Apply all migrations
+- Start Docker SQL Server if not running
+
+**2. Apply Migrations**
+
+Applies any pending migrations to the database. Safe to run multiple times.
+
+```bash
+# From repository root
+npm run db:migrate
+
+# Or from services/api directory
+bash db-migrate.sh     # Linux/macOS
+db-migrate.bat        # Windows
+```
+
+This will:
+- Apply only new/pending migrations
+- Skip already-applied migrations
+- Start Docker SQL Server if not running
+
+**3. Seed Sample Data**
+
+Populates the database with sample data for development. Safe to run multiple times (checks if data exists).
+
+```bash
+# From repository root
+npm run db:seed
+
+# Or from services/api directory
+bash db-seed.sh        # Linux/macOS
+db-seed.bat           # Windows
+```
+
+Sample data includes:
+- **4 Users**: 2 bartenders, 2 venues
+  - `bartender@example.com`
+  - `jane.bartender@example.com`
+  - `venue@example.com`
+  - `downtown.venue@example.com`
+- **4 Shifts**: Various open shifts at different venues
+
+#### Creating New Migrations
+
+When you make changes to your models or database schema:
+
+```bash
+# Navigate to the API project
+cd services/api/GigBartending.Api
+
+# Create a new migration
+dotnet ef migrations add YourMigrationName
+
+# Apply the migration
 dotnet ef database update
+
+# Or use the migration script
+cd ..
+bash db-migrate.sh  # or db-migrate.bat on Windows
+```
+
+#### Removing the Last Migration
+
+If you need to remove the most recent migration (before it's been applied):
+
+```bash
+cd services/api/GigBartending.Api
+dotnet ef migrations remove
+```
+
+#### Safety Features
+
+All scripts include:
+- Production environment checks (will refuse to run if `ASPNETCORE_ENVIRONMENT=Production`)
+- Docker container status checks
+- Automatic Docker startup if container is not running
+- Clear warnings about data loss
+- Detailed progress output
+
+#### Manual Database Operations
+
+For advanced scenarios, use EF Core tools directly:
+
+```bash
+cd services/api/GigBartending.Api
+
+# List all migrations
+dotnet ef migrations list
+
+# Update to a specific migration
+dotnet ef database update MigrationName
+
+# Generate SQL script for a migration
+dotnet ef migrations script
+
+# Get database information
+dotnet ef dbcontext info
 ```
 
 ## Testing

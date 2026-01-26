@@ -107,6 +107,95 @@ The API will be available at `http://localhost:5000`
 
 See [services/api/README.md](services/api/README.md) for detailed API documentation.
 
+### Database Setup and Management
+
+The application uses SQL Server running in a Docker container for local development. Database management commands make it easy to reset, migrate, and seed your local database.
+
+#### Prerequisites for Database
+
+- Docker Desktop (Windows/macOS) or Docker Engine (Linux)
+- .NET 8 SDK
+- SQL Server must be running (via `docker-compose up -d` in `services/api/`)
+
+#### Database Commands
+
+**⚠️ WARNING: These commands are for LOCAL DEVELOPMENT ONLY! Never run these in production!**
+
+All database scripts include safeguards against running in production environments.
+
+**Reset Database (Drop & Recreate):**
+```bash
+# From repository root
+npm run db:reset
+
+# Or from services/api directory
+bash db-reset.sh        # Linux/macOS
+db-reset.bat           # Windows
+```
+This will:
+- Drop the existing database (all data will be lost!)
+- Recreate the database
+- Apply all migrations
+
+**Apply Migrations:**
+```bash
+# From repository root
+npm run db:migrate
+
+# Or from services/api directory
+bash db-migrate.sh     # Linux/macOS
+db-migrate.bat        # Windows
+```
+This will:
+- Apply any pending migrations to the database
+- Safe to run multiple times
+
+**Seed Sample Data:**
+```bash
+# From repository root
+npm run db:seed
+
+# Or from services/api directory
+bash db-seed.sh        # Linux/macOS
+db-seed.bat           # Windows
+```
+This will:
+- Populate the database with sample users and shifts
+- Safe to run multiple times (checks if data exists)
+
+#### Complete Reset Workflow
+
+To completely reset your local database from scratch:
+
+```bash
+npm run db:reset    # Drop & recreate database with migrations
+npm run db:seed     # Add sample data
+```
+
+Or as a one-liner:
+```bash
+npm run db:reset && npm run db:seed
+```
+
+#### Sample Data
+
+After seeding, the database will contain:
+- **Bartender accounts**: `bartender@example.com`, `jane.bartender@example.com`
+- **Venue accounts**: `venue@example.com`, `downtown.venue@example.com`
+- **Sample shifts**: 4 open shifts at various venues and times
+
+**Note**: Sample passwords are stored as plaintext (not hashed) for development simplicity. Production applications should use proper password hashing with BCrypt or ASP.NET Core Identity.
+
+#### Troubleshooting Database Issues
+
+If you encounter database issues:
+1. Ensure Docker is running: `docker ps`
+2. Start SQL Server if needed: `cd services/api && docker-compose up -d`
+3. Reset the database: `npm run db:reset`
+4. Reseed data: `npm run db:seed`
+
+For detailed database documentation, see [services/api/README.md](services/api/README.md).
+
 #### Web App
 
 ```bash

@@ -15,7 +15,10 @@
     "api:test": "cd services/api && dotnet test",
     "build:web": "npm run build --workspace=@gig-bartending/web",
     "lint": "npm run lint --workspaces --if-present",
-    "type-check": "npm run type-check --workspaces --if-present"
+    "type-check": "npm run type-check --workspaces --if-present",
+    "db:reset": "cd services/api && bash db-reset.sh",
+    "db:migrate": "cd services/api && bash db-migrate.sh",
+    "db:seed": "cd services/api && bash db-seed.sh"
   },
   "keywords": [
     "bartending",
