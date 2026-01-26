@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using GigBartending.Api.Data;
+using GigBartending.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,28 @@ if (!string.IsNullOrEmpty(connectionString))
         options.UseSqlServer(connectionString));
 }
 
+// Add Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<GigBartendingDbContext>()
+.AddDefaultTokenProviders();
+
 var app = builder.Build();
 
 // Check for seed-only mode
@@ -31,7 +55,8 @@ if (args.Length > 0 && args.Any(arg => arg.Equals("--seed-only", StringCompariso
         try
         {
             var context = services.GetRequiredService<GigBartendingDbContext>();
-            DbSeeder.SeedData(context);
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+            await DbSeeder.SeedDataAsync(context, userManager);
             Console.WriteLine("Seeding completed successfully!");
         }
         catch (Exception ex)
@@ -50,6 +75,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 var summaries = new[]
 {
