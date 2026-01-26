@@ -19,7 +19,7 @@ public static class DbSeeder
         var bartender1 = new User
         {
             Email = "bartender@example.com",
-            PasswordHash = "hashed_password_123", // In production, use proper password hashing
+            PasswordHash = "hashed_password_123", // NOTE: These are plaintext for development only. Use BCrypt or ASP.NET Core Identity password hasher in production.
             Role = "Bartender",
             FirstName = "John",
             LastName = "Smith",
@@ -31,7 +31,7 @@ public static class DbSeeder
         var bartender2 = new User
         {
             Email = "jane.bartender@example.com",
-            PasswordHash = "hashed_password_456",
+            PasswordHash = "hashed_password_456", // NOTE: These are plaintext for development only. Use BCrypt or ASP.NET Core Identity password hasher in production.
             Role = "Bartender",
             FirstName = "Jane",
             LastName = "Doe",
@@ -43,7 +43,7 @@ public static class DbSeeder
         var venue1 = new User
         {
             Email = "venue@example.com",
-            PasswordHash = "hashed_password_789",
+            PasswordHash = "hashed_password_789", // NOTE: These are plaintext for development only. Use BCrypt or ASP.NET Core Identity password hasher in production.
             Role = "Venue",
             FirstName = "The Grand",
             LastName = "Hotel",
@@ -55,7 +55,7 @@ public static class DbSeeder
         var venue2 = new User
         {
             Email = "downtown.venue@example.com",
-            PasswordHash = "hashed_password_abc",
+            PasswordHash = "hashed_password_abc", // NOTE: These are plaintext for development only. Use BCrypt or ASP.NET Core Identity password hasher in production.
             Role = "Venue",
             FirstName = "Downtown",
             LastName = "Bar & Grill",

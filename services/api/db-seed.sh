@@ -62,8 +62,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "✅ Database seeded successfully"
-echo ""
 
+echo ""
 echo "╔════════════════════════════════════════════════════════════════════╗"
 echo "║                   DATABASE SEEDED SUCCESSFULLY!                    ║"
 echo "╚════════════════════════════════════════════════════════════════════╝"

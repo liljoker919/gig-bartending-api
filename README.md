@@ -184,7 +184,7 @@ After seeding, the database will contain:
 - **Venue accounts**: `venue@example.com`, `downtown.venue@example.com`
 - **Sample shifts**: 4 open shifts at various venues and times
 
-All passwords are hashed (not for production use).
+**Note**: Sample passwords are stored as plaintext (not hashed) for development simplicity. Production applications should use proper password hashing with BCrypt or ASP.NET Core Identity.
 
 #### Troubleshooting Database Issues
 

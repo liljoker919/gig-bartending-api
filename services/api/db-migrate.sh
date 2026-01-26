@@ -71,8 +71,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo "✅ Migrations applied successfully"
-echo ""
 
+echo ""
 echo "╔════════════════════════════════════════════════════════════════════╗"
 echo "║                  MIGRATIONS APPLIED SUCCESSFULLY!                  ║"
 echo "╚════════════════════════════════════════════════════════════════════╝"
