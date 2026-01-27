@@ -174,3 +174,4 @@ bld/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+_codeql_detected_source_root
