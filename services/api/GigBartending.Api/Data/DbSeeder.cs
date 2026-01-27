@@ -29,7 +29,11 @@ public static class DbSeeder
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
-        await userManager.CreateAsync(bartender1, "Password123!");
+        var bartender1Result = await userManager.CreateAsync(bartender1, "Password123!");
+        if (!bartender1Result.Succeeded)
+        {
+            Console.WriteLine($"Failed to create bartender1: {string.Join(", ", bartender1Result.Errors.Select(e => e.Description))}");
+        }
 
         var bartender2 = new ApplicationUser
         {
@@ -43,7 +47,11 @@ public static class DbSeeder
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
-        await userManager.CreateAsync(bartender2, "Password456!");
+        var bartender2Result = await userManager.CreateAsync(bartender2, "Password456!");
+        if (!bartender2Result.Succeeded)
+        {
+            Console.WriteLine($"Failed to create bartender2: {string.Join(", ", bartender2Result.Errors.Select(e => e.Description))}");
+        }
 
         var venue1 = new ApplicationUser
         {
@@ -58,6 +66,10 @@ public static class DbSeeder
             UpdatedAt = DateTime.UtcNow
         };
         var venue1Result = await userManager.CreateAsync(venue1, "Password789!");
+        if (!venue1Result.Succeeded)
+        {
+            Console.WriteLine($"Failed to create venue1: {string.Join(", ", venue1Result.Errors.Select(e => e.Description))}");
+        }
 
         var venue2 = new ApplicationUser
         {
@@ -71,7 +83,11 @@ public static class DbSeeder
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
-        var venue2Result = await userManager.CreateAsync(venue2, "PasswordAbc!");
+        var venue2Result = await userManager.CreateAsync(venue2, "Password123!");
+        if (!venue2Result.Succeeded)
+        {
+            Console.WriteLine($"Failed to create venue2: {string.Join(", ", venue2Result.Errors.Select(e => e.Description))}");
+        }
 
         // Also create corresponding legacy User records for backward compatibility with Shifts
         // Get the password hasher to hash passwords properly
@@ -115,7 +131,7 @@ public static class DbSeeder
             new User
             {
                 Email = "downtown.venue@example.com",
-                PasswordHash = passwordHasher.HashPassword(venue2, "PasswordAbc!"),
+                PasswordHash = passwordHasher.HashPassword(venue2, "Password123!"),
                 Role = "Venue",
                 FirstName = "Downtown",
                 LastName = "Bar & Grill",
