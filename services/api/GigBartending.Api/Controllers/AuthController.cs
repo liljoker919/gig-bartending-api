@@ -31,6 +31,8 @@ public class AuthController : ControllerBase
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             PhoneNumber = dto.PhoneNumber,
+            // NOTE: Setting EmailConfirmed = true for development/demo purposes
+            // In production, implement email verification flow before setting this to true
             EmailConfirmed = true,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow

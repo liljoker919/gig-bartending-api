@@ -1,5 +1,6 @@
 using GigBartending.Api.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace GigBartending.Api.Data;
 
@@ -7,8 +8,8 @@ public static class DbSeeder
 {
     public static async Task SeedDataAsync(GigBartendingDbContext context, UserManager<ApplicationUser> userManager)
     {
-        // Check if data already exists
-        if (context.Users.Any())
+        // Check if data already exists in either Identity users or Legacy users
+        if (context.Users.Any() || context.LegacyUsers.Any())
         {
             Console.WriteLine("Database already contains data. Skipping seed.");
             return;
@@ -212,6 +213,7 @@ public static class DbSeeder
         context.Shifts.AddRange(shifts);
         context.SaveChanges();
 
-        Console.WriteLine($"Seeded {context.Users.Count()} identity users, {context.LegacyUsers.Count()} legacy users, and {context.Shifts.Count()} shifts.");
+        var identityUserCount = await userManager.Users.CountAsync();
+        Console.WriteLine($"Seeded {identityUserCount} identity users, {context.LegacyUsers.Count()} legacy users, and {context.Shifts.Count()} shifts.");
     }
 }
