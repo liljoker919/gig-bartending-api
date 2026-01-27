@@ -1,23 +1,35 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using GigBartending.Api.Models;
 
 namespace GigBartending.Api.Data;
 
-public class GigBartendingDbContext : DbContext
+public class GigBartendingDbContext : IdentityDbContext<ApplicationUser>
 {
     public GigBartendingDbContext(DbContextOptions<GigBartendingDbContext> options)
         : base(options)
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    // Legacy user table for backward compatibility
+    public DbSet<User> LegacyUsers { get; set; }
     public DbSet<Shift> Shifts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        // Configure User entity
+        // Configure ApplicationUser entity
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(u => u.Role).IsRequired().HasMaxLength(50);
+            entity.Property(u => u.FirstName).HasMaxLength(100);
+            entity.Property(u => u.LastName).HasMaxLength(100);
+            entity.Property(u => u.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(u => u.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
+        });
+
+        // Configure User entity (legacy/backward compatibility)
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(u => u.Id);
