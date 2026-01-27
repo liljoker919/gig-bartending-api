@@ -27,7 +27,9 @@ gig-bartending-app/
 │   │   │   └── styles/      # CSS styles
 │   │   └── package.json
 │   │
-│   └── mobile/              # React Native mobile app (Expo)
+│   └── mobile/              # React Native mobile app (Bare RN)
+│       ├── android/         # Android native project
+│       ├── ios/             # iOS native project
 │       ├── src/
 │       │   ├── components/  # Reusable components
 │       │   ├── screens/     # Screen components
@@ -62,8 +64,8 @@ gig-bartending-app/
 
 - Node.js 18+ and npm
 - For mobile development:
-  - Expo CLI
-  - iOS Simulator (Mac only) or Android Studio
+  - **iOS**: macOS with Xcode 14.0+ and CocoaPods
+  - **Android**: Android Studio with Android SDK (API level 33+) and JDK 17
 
 ### Installation
 
@@ -206,14 +208,28 @@ The web app will be available at `http://localhost:3000`
 
 #### Mobile App
 
+**Prerequisites:**
+- For iOS: macOS with Xcode installed
+- For Android: Android Studio with Android SDK
+
+**Start Metro Bundler:**
 ```bash
 npm run mobile
 ```
 
-Then follow the Expo CLI instructions to:
-- Press `i` for iOS simulator
-- Press `a` for Android emulator
-- Scan QR code with Expo Go app on your physical device
+**Run on iOS (macOS only):**
+```bash
+cd apps/mobile
+npx react-native run-ios
+```
+
+**Run on Android:**
+```bash
+cd apps/mobile
+npx react-native run-android
+```
+
+For detailed mobile setup instructions, see [apps/mobile/README.md](apps/mobile/README.md).
 
 ### Building
 
@@ -282,7 +298,7 @@ The `@gig-bartending/shared` package contains:
 ## Technology Stack
 
 - **Frontend Framework**: React 18
-- **Mobile Framework**: React Native (Expo)
+- **Mobile Framework**: React Native 0.73.6 (Bare)
 - **Web Bundler**: Vite
 - **Language**: TypeScript
 - **Navigation**: 

@@ -1,79 +1,158 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Gig Bartending Mobile App
 
-# Getting Started
+A React Native mobile application for the Gig Bartending platform.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+## Tech Stack
 
-## Step 1: Start the Metro Server
+- **React Native**: 0.73.6
+- **React**: 18.2.0
+- **TypeScript**: 5.3.0
+- **React Navigation**: Stack and Native navigation
+- **Shared Package**: `@gig-bartending/shared` for shared business logic and types
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## Prerequisites
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### General Requirements
+- Node.js 18 or higher
+- npm
 
+### iOS Development
+- macOS operating system
+- Xcode 14.0 or higher
+- CocoaPods (usually installed with Xcode)
+
+### Android Development
+- Android Studio
+- Android SDK (API level 33 or higher)
+- Java Development Kit (JDK) 17
+
+## Installation
+
+1. Install dependencies from the repository root:
 ```bash
-# using npm
+npm install
+```
+
+2. Install iOS dependencies (macOS only):
+```bash
+cd apps/mobile/ios
+pod install
+cd -
+```
+
+## Running the App
+
+### Start Metro Bundler
+
+From the repository root:
+```bash
+npm run mobile
+```
+
+Or from the mobile app directory:
+```bash
+cd apps/mobile
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Start your Application
+### iOS (macOS only)
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
-
-### For Android
-
+From the repository root:
 ```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+cd apps/mobile
+npx react-native run-ios
 ```
 
-### For iOS
-
+Or to run on a specific simulator:
 ```bash
-# using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+npx react-native run-ios --simulator="iPhone 15 Pro"
 ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+### Android
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+Ensure you have an Android emulator running or a device connected, then:
 
-## Step 3: Modifying your App
+From the repository root:
+```bash
+cd apps/mobile
+npx react-native run-android
+```
 
-Now that you have successfully run the app, let's modify it.
+## Development
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+### Type Checking
+```bash
+npm run type-check
+```
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+### Linting
+```bash
+npm run lint
+```
 
-## Congratulations! :tada:
+### Testing
+```bash
+npm test
+```
 
-You've successfully run and modified your React Native App. :partying_face:
+## Project Structure
 
-### Now what?
+```
+apps/mobile/
+├── android/              # Android native project
+├── ios/                  # iOS native project
+├── src/
+│   ├── components/       # Reusable UI components
+│   ├── navigation/       # React Navigation setup
+│   ├── screens/          # Screen components
+│   └── styles.ts         # Shared styles
+├── App.tsx              # Root component
+├── index.js             # Entry point
+└── package.json         # Dependencies and scripts
+```
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+## Troubleshooting
 
-# Troubleshooting
+### iOS
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+If you encounter build errors:
+1. Clean the build folder: `cd ios && xcodebuild clean && cd ..`
+2. Reinstall pods: `cd ios && pod install && cd ..`
+3. Reset Metro cache: `npm start -- --reset-cache`
 
-# Learn More
+### Android
 
-To learn more about React Native, take a look at the following resources:
+If you encounter build errors:
+1. Clean the build: `cd android && ./gradlew clean && cd ..`
+2. Reset Metro cache: `npm start -- --reset-cache`
+3. Check that Android SDK is properly installed and environment variables are set
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### Common Issues
+
+**Metro bundler issues:**
+```bash
+# Kill any existing Metro processes
+killall node
+
+# Start with cache reset
+npm start -- --reset-cache
+```
+
+**iOS CocoaPods issues:**
+```bash
+cd ios
+pod deintegrate
+pod install
+cd ..
+```
+
+## Bundle Identifiers
+
+- **iOS**: `com.gigbartending.GigBartendingMobile`
+- **Android**: `com.gigbartending.app`
+
+## Additional Resources
+
+- [React Native Documentation](https://reactnative.dev/docs/getting-started)
+- [React Navigation Documentation](https://reactnavigation.org/docs/getting-started)
+- [Troubleshooting Guide](https://reactnative.dev/docs/troubleshooting)
