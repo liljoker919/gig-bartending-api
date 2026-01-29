@@ -1,4 +1,4 @@
-package com.gigbartending.app
+package com.example.gig_bartending_app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
@@ -8,15 +8,11 @@ import com.facebook.react.defaults.DefaultReactActivityDelegate
 class MainActivity : ReactActivity() {
 
   /**
-   * Returns the name of the main component registered from JavaScript. This is used to schedule
-   * rendering of the component.
+   * Returns the name of the main component registered from JavaScript.
+   * This must match the "name" field in your root app.json.
    */
-  override fun getMainComponentName(): String = "GigBartendingMobile"
+  override fun getMainComponentName(): String = "gig-bartending-app"
 
-  /**
-   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
-   */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 }
