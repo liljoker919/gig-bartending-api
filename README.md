@@ -1,131 +1,287 @@
-# Gig Bartending App 🍸
+# Gig Bartending API
 
-A cross-platform application that connects bartenders with open shifts. Includes web and mobile experiences where venues can post shifts and bartenders can discover, request, and manage gig-based bartending opportunities.
+.NET 8 Web API service for the Gig Bartending application.
 
-## Features
+## Overview
 
-- **Cross-Platform**: React Native mobile app and React web app sharing common logic
-- **User Roles**: Support for both bartenders and venue owners
-- **Authentication**: Login and signup with role-based access
-- **Shift Management**: 
-  - Venues can post, manage, and cancel shifts
-  - Bartenders can browse and request shifts
-  - Request/accept workflow for shift assignments
-- **Profile Management**: Customize profiles based on user role
-- **Monorepo Structure**: Shared logic and types across platforms
-- **Ready for API Integration**: Structured for easy backend integration
+This is the backend API service for the Gig Bartending application. It provides RESTful endpoints for authentication, shift management, user profiles, and more.
+
+## Technology Stack
+
+- **.NET 8**: Modern, high-performance framework
+- **ASP.NET Core Web API**: RESTful API framework
+- **Entity Framework Core**: ORM for database access (to be configured)
+- **JWT Authentication**: Token-based authentication (to be configured)
 
 ## Project Structure
 
 ```
-gig-bartending-app/
-├── apps/
-│   ├── web/                 # React web application (Vite)
-│   │   ├── src/
-│   │   │   ├── components/  # Reusable components
-│   │   │   ├── pages/       # Page components
-│   │   │   └── styles/      # CSS styles
-│   │   └── package.json
-│   │
-│   └── mobile/              # React Native mobile app (Bare RN)
-│       ├── android/         # Android native project
-│       ├── ios/             # iOS native project
-│       ├── src/
-│       │   ├── components/  # Reusable components
-│       │   ├── screens/     # Screen components
-│       │   └── navigation/  # Navigation setup
-│       └── package.json
-│
-├── services/
-│   └── api/                 # .NET Web API backend
-│       ├── GigBartending.Api/
-│       │   ├── Controllers/ # API endpoints
-│       │   ├── Models/      # Domain models
-│       │   ├── Services/    # Business logic
-│       │   └── Program.cs   # Entry point
-│       └── README.md        # API documentation
-│
-├── packages/
-│   └── shared/              # Shared logic and types
-│       ├── src/
-│       │   ├── types/       # TypeScript interfaces
-│       │   ├── contexts/    # React contexts (Auth)
-│       │   ├── hooks/       # Custom hooks
-│       │   ├── api/         # API client structure
-│       │   └── utils/       # Utility functions
-│       └── package.json
-│
-└── package.json             # Root workspace configuration
+services/api/
+├── GigBartending.Api/           # Main API project
+│   ├── Controllers/             # API endpoints
+│   ├── Models/                  # Domain models
+│   ├── DTOs/                    # Data Transfer Objects
+│   ├── Services/                # Business logic layer
+│   ├── Data/                    # Database context and repositories
+│   ├── Middleware/              # Custom middleware
+│   ├── Properties/              # Launch settings
+│   ├── Program.cs               # Application entry point
+│   ├── appsettings.json         # Configuration
+│   └── GigBartending.Api.csproj # Project file
+└── GigBartending.slnx           # Solution file
 ```
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ and npm
-- For mobile development:
-  - **iOS**: macOS with Xcode 14.0+ and CocoaPods
-  - **Android**: Android Studio with Android SDK (API level 33+) and JDK 17
+- .NET 8 SDK or later
+- Visual Studio 2022 / VS Code / Rider (optional)
+- SQL Server / PostgreSQL (for production use)
+- **Docker Desktop** on Windows/macOS (or Docker Engine + Docker Compose on Linux) for local SQL Server development
+
+#### Installing Docker Desktop for Windows
+
+1. **Download Docker Desktop**:
+   - Visit: https://www.docker.com/products/docker-desktop
+   - Download the Windows version
+
+2. **Install Docker Desktop**:
+   - Run the installer as Administrator
+   - Follow the installation wizard
+   - Restart your computer if prompted
+
+3. **Verify Installation**:
+
+   ```bash
+   docker --version
+   docker-compose --version
+   ```
+
+4. **Start Docker Desktop**:
+   - Launch Docker Desktop from Start menu
+   - Wait for the Docker whale icon to show it's running
+   - The daemon should start automatically
+
+**Note**: Docker Desktop includes both Docker Engine and Docker Compose, so no separate installation is needed.
+
+### Local Development with Docker Compose
+
+This project includes a Docker Compose setup for running SQL Server locally during development.
+
+#### Starting SQL Server
+
+1. Copy the environment file and set your SQL Server password in both settings:
+
+```bash
+cp ../../.env.example ../../.env
+# Edit .env and set SQLSERVER_SA_PASSWORD to a strong password
+# Update DATABASE_CONNECTION_STRING to use the same password value
+```
+
+2. Start the SQL Server container:
+
+```bash
+docker-compose up -d
+```
+
+The SQL Server will be available at `localhost:1433`.
+
+#### Stopping SQL Server
+
+```bash
+docker-compose down
+```
+
+#### SSMS Connection Details
+
+- **Server**: `localhost,1433`
+- **Authentication**: SQL Server Authentication
+- **Login**: `sa`
+- **Password**: The value of `SQLSERVER_SA_PASSWORD` from your `.env` file
+- **Trust Server Certificate**: `true` (recommended for development)
+
+#### Connecting to SSMS (SQL Server Management Studio)
+
+1. **Open SSMS** on your Windows machine.
+
+2. **Connect to Server** dialog:
+   - **Server type**: Database Engine
+   - **Server name**: `localhost,1433`
+   - **Authentication**: SQL Server Authentication
+   - **Login**: `sa`
+   - **Password**: Value from `SQLSERVER_SA_PASSWORD` in your `.env`
+
+3. **Connection Options**:
+   - Check **"Trust server certificate"** (recommended for development)
+   - Optionally check **"Encrypt connection"**
+
+4. **Click "Connect"** - you should now be connected to your Docker SQL Server!
+
+**Test Query** (run in a new query window):
+
+```sql
+SELECT @@VERSION AS SQL_Server_Version;
+```
+
+**Alternative Connection String** (for other tools):
+
+```
+Server=localhost,1433;Database=master;User Id=sa;Password=<YOUR_SA_PASSWORD>;TrustServerCertificate=true
+```
+
+#### Troubleshooting
+
+- **Password Requirements**: SA password must be at least 8 characters and contain uppercase, lowercase, digits, and symbols.
+- **Port Conflicts**: If port 1433 is already in use, check if another SQL Server instance is running or change the port mapping in `docker-compose.yml`.
+- **Container Logs**: View logs with `docker-compose logs sqlserver`
+- **Reset Database**: Remove the container and volume with `docker-compose down -v` then restart.
 
 ### Installation
 
-1. Clone the repository:
+1. Navigate to the API directory:
+
 ```bash
-git clone https://github.com/liljoker919/gig-bartending-app.git
-cd gig-bartending-app
+cd services/api
 ```
 
-2. Set up environment variables:
+2. Restore dependencies:
+
 ```bash
-cp .env.example .env
+dotnet restore
 ```
 
-Edit the `.env` file to configure your local environment settings. See the [Environment Configuration](#environment-configuration) section for details.
+3. Build the project:
 
-3. Install dependencies:
 ```bash
-npm install
+dotnet build
 ```
 
-This will install dependencies for all workspaces (root, shared, web, and mobile).
+### Running the API
 
-### Running the Applications
+Run in development mode:
 
-#### API (Backend)
+```bash
+cd GigBartending.Api
+dotnet run
+```
 
-For API development, you'll need .NET 8 SDK or later.
+Or run from the root using the workspace script:
 
 ```bash
 npm run api
 ```
 
-Or directly:
+The API will be available at:
+
+- HTTP: `http://localhost:5000`
+- Development: See `Properties/launchSettings.json` for configured ports
+
+### Running Tests (Future)
+
 ```bash
-cd services/api/GigBartending.Api
-dotnet run
+dotnet test
 ```
 
-The API will be available at `http://localhost:5000`
+## Configuration
 
-See [services/api/README.md](services/api/README.md) for detailed API documentation.
+Configuration is managed through `appsettings.json` and `appsettings.Development.json`.
 
-### Database Setup and Management
+### Environment Variables
 
-The application uses SQL Server running in a Docker container for local development. Database management commands make it easy to reset, migrate, and seed your local database.
+Key environment variables to configure:
 
-#### Prerequisites for Database
+- `ASPNETCORE_ENVIRONMENT`: Development/Staging/Production
+- `ConnectionStrings__DefaultConnection`: Database connection string
+- `JWT__Secret`: Secret key for JWT token generation
+- `JWT__Issuer`: Token issuer
+- `JWT__Audience`: Token audience
 
-- Docker Desktop (Windows/macOS) or Docker Engine (Linux)
-- .NET 8 SDK
-- SQL Server must be running (via `docker-compose up -d` in `services/api/`)
+## API Endpoints
 
-#### Database Commands
+See [API.md](../../API.md) in the root directory for detailed endpoint documentation.
 
-**⚠️ WARNING: These commands are for LOCAL DEVELOPMENT ONLY! Never run these in production!**
+### Planned Endpoints
 
-All database scripts include safeguards against running in production environments.
+#### Authentication
 
-**Reset Database (Drop & Recreate):**
+- `POST /api/auth/signup` - Register new user
+- `POST /api/auth/login` - Authenticate user
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/me` - Get current user
+
+#### Shifts
+
+- `GET /api/shifts` - Get all shifts
+- `GET /api/shifts/{id}` - Get shift by ID
+- `POST /api/shifts` - Create new shift (venue only)
+- `PUT /api/shifts/{id}` - Update shift (venue only)
+- `DELETE /api/shifts/{id}` - Delete shift (venue only)
+- `POST /api/shifts/{id}/request` - Request shift (bartender only)
+- `POST /api/shifts/{id}/accept` - Accept bartender request (venue only)
+
+#### Profile
+
+- `GET /api/profile` - Get current user profile
+- `PUT /api/profile` - Update profile
+- `POST /api/profile/photo` - Upload profile photo
+
+## Development
+
+### Adding a New Controller
+
+1. Create a new controller in the `Controllers/` directory
+2. Inherit from `ControllerBase`
+3. Add `[ApiController]` and `[Route("api/[controller]")]` attributes
+4. Implement your endpoints
+
+Example:
+
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class ShiftsController : ControllerBase
+{
+    [HttpGet]
+    public IActionResult GetShifts()
+    {
+        // Implementation
+        return Ok();
+    }
+}
+```
+
+### Adding a New Service
+
+1. Create an interface in `Services/I{ServiceName}.cs`
+2. Create implementation in `Services/{ServiceName}.cs`
+3. Register in `Program.cs` with dependency injection
+
+### Database Migrations and Reset
+
+**⚠️ WARNING: Database reset commands are for LOCAL DEVELOPMENT ONLY!**
+
+The API includes scripts to manage database migrations and seeding. These scripts are designed for local development and include safeguards against running in production.
+
+#### Quick Start - Reset Database
+
+To reset your local database and populate it with sample data:
+
+```bash
+# From repository root
+npm run db:reset && npm run db:seed
+
+# Or from services/api directory
+bash db-reset.sh && bash db-seed.sh     # Linux/macOS
+db-reset.bat && db-seed.bat            # Windows
+```
+
+#### Available Commands
+
+**1. Reset Database (Drop & Recreate)**
+
+Drops the entire database and recreates it with all migrations applied.
+
 ```bash
 # From repository root
 npm run db:reset
@@ -134,12 +290,17 @@ npm run db:reset
 bash db-reset.sh        # Linux/macOS
 db-reset.bat           # Windows
 ```
+
 This will:
-- Drop the existing database (all data will be lost!)
+- Drop the existing database (⚠️ ALL DATA WILL BE LOST!)
 - Recreate the database
 - Apply all migrations
+- Start Docker SQL Server if not running
 
-**Apply Migrations:**
+**2. Apply Migrations**
+
+Applies any pending migrations to the database. Safe to run multiple times.
+
 ```bash
 # From repository root
 npm run db:migrate
@@ -148,11 +309,16 @@ npm run db:migrate
 bash db-migrate.sh     # Linux/macOS
 db-migrate.bat        # Windows
 ```
-This will:
-- Apply any pending migrations to the database
-- Safe to run multiple times
 
-**Seed Sample Data:**
+This will:
+- Apply only new/pending migrations
+- Skip already-applied migrations
+- Start Docker SQL Server if not running
+
+**3. Seed Sample Data**
+
+Populates the database with sample data for development. Safe to run multiple times (checks if data exists).
+
 ```bash
 # From repository root
 npm run db:seed
@@ -161,245 +327,166 @@ npm run db:seed
 bash db-seed.sh        # Linux/macOS
 db-seed.bat           # Windows
 ```
-This will:
-- Populate the database with sample users and shifts
-- Safe to run multiple times (checks if data exists)
 
-#### Complete Reset Workflow
+Sample data includes:
+- **4 Users**: 2 bartenders, 2 venues
+  - `bartender@example.com`
+  - `jane.bartender@example.com`
+  - `venue@example.com`
+  - `downtown.venue@example.com`
+- **4 Shifts**: Various open shifts at different venues
 
-To completely reset your local database from scratch:
+#### Creating New Migrations
 
-```bash
-npm run db:reset    # Drop & recreate database with migrations
-npm run db:seed     # Add sample data
-```
-
-Or as a one-liner:
-```bash
-npm run db:reset && npm run db:seed
-```
-
-#### Sample Data
-
-After seeding, the database will contain:
-- **Bartender accounts**: `bartender@example.com`, `jane.bartender@example.com`
-- **Venue accounts**: `venue@example.com`, `downtown.venue@example.com`
-- **Sample shifts**: 4 open shifts at various venues and times
-
-**Note**: Sample passwords are stored as plaintext (not hashed) for development simplicity. Production applications should use proper password hashing with BCrypt or ASP.NET Core Identity.
-
-#### Troubleshooting Database Issues
-
-If you encounter database issues:
-1. Ensure Docker is running: `docker ps`
-2. Start SQL Server if needed: `cd services/api && docker-compose up -d`
-3. Reset the database: `npm run db:reset`
-4. Reseed data: `npm run db:seed`
-
-For detailed database documentation, see [services/api/README.md](services/api/README.md).
-
-#### Web App
+When you make changes to your models or database schema:
 
 ```bash
-npm run web
+# Navigate to the API project
+cd services/api/GigBartending.Api
+
+# Create a new migration
+dotnet ef migrations add YourMigrationName
+
+# Apply the migration
+dotnet ef database update
+
+# Or use the migration script
+cd ..
+bash db-migrate.sh  # or db-migrate.bat on Windows
 ```
 
-The web app will be available at `http://localhost:3000`
+#### Removing the Last Migration
 
-#### Mobile App
-
-**Prerequisites:**
-- For iOS: macOS with Xcode installed
-- For Android: Android Studio with Android SDK
-
-**Start Metro Bundler:**
-```bash
-npm run mobile
-```
-
-**Run on iOS (macOS only):**
-```bash
-cd apps/mobile
-npx react-native run-ios
-```
-
-**Run on Android:**
-```bash
-cd apps/mobile
-npx react-native run-android
-```
-
-For detailed mobile setup instructions, see [apps/mobile/README.md](apps/mobile/README.md).
-
-### Building
-
-#### Web App
+If you need to remove the most recent migration (before it's been applied):
 
 ```bash
-npm run build:web
+cd services/api/GigBartending.Api
+dotnet ef migrations remove
 ```
 
-The built files will be in `apps/web/dist/`
+#### Safety Features
 
-## Usage
+All scripts include:
+- Production environment checks (will refuse to run if `ASPNETCORE_ENVIRONMENT=Production`)
+- Docker container status checks
+- Automatic Docker startup if container is not running
+- Clear warnings about data loss
+- Detailed progress output
 
-### Demo Accounts
+#### Manual Database Operations
 
-The app includes mock authentication for demo purposes:
-
-**Bartender Account:**
-- Email: `bartender@example.com`
-- Password: any password
-
-**Venue Account:**
-- Email: `venue@example.com`
-- Password: any password
-
-### User Flows
-
-#### For Bartenders:
-1. Sign up or log in with bartender role
-2. Browse available shifts on the home screen
-3. Click "Request This Shift" to request a shift
-4. View profile and manage your information
-
-#### For Venues:
-1. Sign up or log in with venue role
-2. Click "Post New Shift" to create a shift listing
-3. Fill in shift details (title, date, time, rate, etc.)
-4. View and manage your posted shifts
-5. See how many bartenders have requested each shift
-
-## Shared Package
-
-The `@gig-bartending/shared` package contains:
-
-### Types (`types/index.ts`)
-- `User`, `UserRole`, `BartenderProfile`, `VenueProfile`
-- `Shift`, `ShiftStatus`, `ShiftRequest`
-- `AuthState`, `LoginCredentials`, `SignupData`
-
-### Contexts (`contexts/`)
-- `AuthContext`: Manages authentication state and login/signup/logout
-- `AuthProvider`: Wraps app to provide auth context
-
-### Hooks (`hooks/`)
-- `useAuth`: Access authentication state and methods
-- `useShifts`: Manage shifts (load, add, request, accept, cancel)
-
-### API Client (`api/`)
-- `ApiClient`: Structure for future backend integration
-- Currently returns mock data
-
-### Utils (`utils/`)
-- `formatCurrency`, `formatDate`, `formatTime`
-- `validateEmail`, `validatePassword`
-
-## Technology Stack
-
-- **Frontend Framework**: React 18
-- **Mobile Framework**: React Native 0.73.6 (Bare)
-- **Web Bundler**: Vite
-- **Language**: TypeScript
-- **Navigation**: 
-  - React Router (Web)
-  - React Navigation (Mobile)
-- **State Management**: React Context API
-- **Styling**: 
-  - CSS (Web)
-  - StyleSheet API (Mobile)
-
-## Environment Configuration
-
-The application uses environment variables for configuration. A `.env.example` file is provided at the repository root with all available configuration options.
-
-### Setup
-
-1. Copy the example file:
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Update the values in `.env` for your local environment.
-
-### Key Environment Variables
-
-- **`VITE_API_BASE_URL`**: API endpoint for the web application (default: `http://localhost:5000`)
-- **`EXPO_PUBLIC_API_BASE_URL`**: API endpoint for the mobile application (use your local IP for physical devices)
-- **`ASPNETCORE_ENVIRONMENT`**: .NET environment mode (Development, Staging, Production)
-- **`DATABASE_CONNECTION_STRING`**: Database connection string for the API
-- **`JWT_SECRET`**: Secret key for JWT token generation (change for production!)
-- **`CORS_ALLOWED_ORIGINS`**: Allowed origins for CORS (include your web and mobile app URLs)
-
-See `.env.example` for the complete list of configuration options with detailed comments.
-
-### Important Notes
-
-- **Never commit** `.env` files to version control (already configured in `.gitignore`)
-- The `.env.example` file documents all available options with safe default values
-- Update `JWT_SECRET` and other sensitive values before deploying to production
-- For mobile development on physical devices, use your computer's local IP address instead of `localhost`
-
-## Future Enhancements
-
-### Backend Integration
-The app is structured for easy backend integration:
-
-1. Replace mock implementations in `packages/shared/src/contexts/AuthContext.tsx`
-2. Implement API calls in `packages/shared/src/api/client.ts`
-3. Update `useShifts` hook to use real API endpoints
-4. Add proper error handling and loading states
-
-### Suggested API Endpoints
-
-```
-POST   /api/auth/login
-POST   /api/auth/signup
-POST   /api/auth/logout
-GET    /api/shifts
-POST   /api/shifts
-PUT    /api/shifts/:id
-DELETE /api/shifts/:id
-POST   /api/shifts/:id/request
-POST   /api/shifts/:id/accept
-GET    /api/profile
-PUT    /api/profile
-```
-
-### Additional Features
-- Real-time notifications for shift requests/accepts
-- Chat between bartenders and venues
-- Rating and review system
-- Shift history and analytics
-- Payment integration
-- Calendar integration
-- Push notifications
-- Image uploads for profiles
-- Advanced search and filtering
-- Geolocation for nearby shifts
-
-## Development
-
-### Type Checking
+For advanced scenarios, use EF Core tools directly:
 
 ```bash
-npm run type-check
+cd services/api/GigBartending.Api
+
+# List all migrations
+dotnet ef migrations list
+
+# Update to a specific migration
+dotnet ef database update MigrationName
+
+# Generate SQL script for a migration
+dotnet ef migrations script
+
+# Get database information
+dotnet ef dbcontext info
 ```
 
-### Linting
+## Testing
+
+### Unit Tests (Future)
+
+Unit tests will be added in a separate `GigBartending.Api.Tests` project.
+
+### Integration Tests (Future)
+
+Integration tests will be added in a separate `GigBartending.Api.IntegrationTests` project.
+
+## Deployment
+
+### Docker (Future)
+
+A Dockerfile will be provided for containerized deployment.
+
+### Azure App Service
+
+The API can be deployed to Azure App Service:
 
 ```bash
-npm run lint
+dotnet publish -c Release
+# Deploy using Azure CLI or Visual Studio
 ```
+
+### Other Platforms
+
+Compatible with any platform that supports .NET 8:
+
+- AWS Elastic Beanstalk
+- Google Cloud Run
+- Kubernetes
+- Traditional IIS hosting
+
+## Security Considerations
+
+### Planned Security Features
+
+1. **JWT Authentication**: Token-based auth with expiration
+2. **HTTPS**: Enforce HTTPS in production
+3. **CORS**: Configure allowed origins
+4. **Rate Limiting**: Prevent abuse
+5. **Input Validation**: Validate all inputs
+6. **SQL Injection Protection**: Use parameterized queries (EF Core)
+7. **XSS Protection**: Sanitize outputs
+8. **Password Hashing**: Use bcrypt or similar
+
+## Performance Considerations
+
+### Planned Optimizations
+
+1. **Response Caching**: Cache GET responses where appropriate
+2. **Database Indexing**: Index frequently queried columns
+3. **Async/Await**: All I/O operations are async
+4. **Connection Pooling**: Efficient database connections
+5. **Compression**: Enable response compression
+
+## Monitoring and Logging
+
+### Planned Logging
+
+- Application Insights (Azure)
+- Serilog for structured logging
+- Health check endpoints
+- Performance monitoring
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Follow C# coding conventions
+2. Write unit tests for new features
+3. Update API documentation
+4. Run tests before committing
+5. Use meaningful commit messages
+
+## Next Steps
+
+1. **Implement Authentication**: Add JWT authentication
+2. **Add Database**: Configure Entity Framework Core with PostgreSQL/SQL Server
+3. **Create Models**: Implement User, Shift, Profile models
+4. **Build Controllers**: Implement API endpoints
+5. **Add Validation**: Input validation and error handling
+6. **Write Tests**: Unit and integration tests
+7. **Add Swagger**: API documentation with Swagger/OpenAPI
+8. **Configure CORS**: Allow frontend origins
+9. **Add Logging**: Implement comprehensive logging
+10. **Deployment Setup**: Docker and CI/CD pipelines
+
+## Resources
+
+- [ASP.NET Core Documentation](https://docs.microsoft.com/aspnet/core)
+- [Entity Framework Core](https://docs.microsoft.com/ef/core)
+- [.NET API Guidelines](https://github.com/microsoft/api-guidelines)
+- [REST API Best Practices](https://restfulapi.net/)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - See [LICENSE](../../LICENSE) file for details.
